@@ -43,3 +43,17 @@ El objetivo es clasificar a pacientes adultos en tres niveles de riesgo cardiova
 4. Abrir `ML-Entregable1.ipynb` con Jupyter o VS Code y ejecutar todas las celdas en orden.
 
 La semilla aleatoria está fijada (`SEED = 42`) para que los resultados sean reproducibles.
+
+## Evolución del proyecto
+
+### Semana 1 (26 oct - 1 nov): análisis exploratorio
+
+- Preparado el entorno: `requirements.txt` con versiones fijadas y `.gitignore`.
+- EDA completo en el apartado 1 del notebook. Problemáticas encontradas:
+  - **Nulos** en `colesterol_ldl`, `glucosa_ayunas`, `horas_sueno_diarias` y `proteina_c_reactiva` (5-8% cada una, ~24% de las filas). Se reparten de forma parecida entre clases, así que se imputarán en vez de eliminar filas.
+  - **Valores imposibles e incoherencias**: alcohol, HDL y triglicéridos negativos, IMC < 12, menores de edad, más de 7 días de ejercicio por semana, sistólica ≤ diastólica, LDL > colesterol total...
+  - **Valores repetidos anómalos**: sistólica, colesterol total, triglicéridos y ácido úrico tienen dos valores exactos repetidos decenas de veces en la cola alta (420 filas en total). Parecen outliers inyectados, no mediciones reales.
+  - **Desbalance de clases** 50% / 30% / 20%, con la clase de alto riesgo como minoritaria.
+  - **Variables categóricas** que hay que codificar (`nivel_actividad` es ordinal, las otras dos nominales).
+  - Correlaciones bajas entre predictoras, así que no hay multicolinealidad.
+- Decisión: todo el preprocesado que aprenda de los datos irá dentro de un `Pipeline` y se ajustará solo con train para evitar data leakage.
