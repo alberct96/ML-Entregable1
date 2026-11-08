@@ -18,7 +18,7 @@ El objetivo es clasificar a pacientes adultos en tres niveles de riesgo cardiova
 | `enfermedad_cardiovascular.csv` | Dataset proporcionado |
 | `requirements.txt` | Librerías y versiones exactas usadas |
 | `data/splits/` | Particiones de desarrollo y test generadas por el notebook |
-| `models/` | Modelos entrenados y guardados por el notebook (por ahora, el baseline) |
+| `models/` | Modelos entrenados (por ahora, el baseline inicial, que el notebook ya no regenera) |
 | `ML-MemoriaEntregable1.tex` / `.docx` | Memoria técnica (plantilla IEEE) |
 | `Practica_1_Machine_Learning_Cardiovascular.pdf` | Enunciado de la práctica |
 | `PR_CTICA_1-_Instrucciones.pdf` | Instrucciones de entrega |
@@ -77,6 +77,4 @@ La semilla aleatoria está fijada (`SEED = 42`) para que los resultados sean rep
   - **Validación**: se descarta el conjunto de validación fijo, porque un único conjunto resulta poco fiable para comparar configuraciones. Se mantiene un test estratificado del 15% y la selección se hace con validación cruzada estratificada de 5 folds sobre el 85% restante (conjunto de desarrollo).
   - **Métricas de seguimiento**: macro-F1, exactitud balanceada y recall de la clase de alto riesgo.
   - **Valores fuera de rango**: alcohol y ejercicio se recortan siempre a su límite; en el resto de variables se implementan el recorte y la conversión a nulo para compararlos.
-  - **Valores repetidos anómalos**: el recorte por percentiles no los corrige, porque el percentil 99 coincide con el máximo. Se localizan por su valor exacto, con detección ajustada solo en entrenamiento, y se convierten en nulos.
-  - **Nulos**: tras la limpieza, cerca del 40% de los pacientes tiene algún valor ausente, así que se imputarán en lugar de eliminar filas.
-- Pendiente: completar el preprocesado (imputación, codificación, transformación, escalado, desbalance y configuraciones a comparar); después, modelos, evaluación y conclusiones.
+  - **Valores repetidos anómalos**: el recorte por percentiles no los corrige, porque el percentil 99 coincide con el máximo. Se localizan por su valor exacto, con detección ajustada solo en entrenamiento, y se convierten en nulos.- Pendiente: completar el preprocesado (imputación, codificación, transformación, escalado, desbalance y configuraciones a comparar); después, modelos, evaluación y conclusiones.
