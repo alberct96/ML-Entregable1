@@ -17,8 +17,8 @@ El objetivo es clasificar a pacientes adultos en tres niveles de riesgo cardiova
 | `ML-Entregable1.ipynb` | Notebook principal: EDA, preprocesado, modelos, evaluación y conclusiones |
 | `enfermedad_cardiovascular.csv` | Dataset proporcionado |
 | `requirements.txt` | Librerías y versiones exactas usadas |
-| `data/splits/` | Particiones de entrenamiento, validación y test generadas por el notebook |
-| `models/` | Modelos entrenados y guardados por el notebook (por ahora, el baseline) |
+| `data/splits/` | Particiones de desarrollo y test generadas por el notebook |
+| `models/` | Modelos entrenados (por ahora, el baseline inicial, que el notebook ya no regenera) |
 | `ML-MemoriaEntregable1.tex` / `.docx` | Memoria técnica (plantilla IEEE) |
 | `Practica_1_Machine_Learning_Cardiovascular.pdf` | Enunciado de la práctica |
 | `PR_CTICA_1-_Instrucciones.pdf` | Instrucciones de entrega |
@@ -62,15 +62,19 @@ La semilla aleatoria está fijada (`SEED = 42`) para que los resultados sean rep
 
 ### Semana 2 (2 nov - 8 nov): revisión del EDA y primer pipeline
 
-- Partición estratificada 68% / 17% / 15% (entrenamiento, validación y test), primer `Pipeline` de preprocesado y Random Forest como modelo baseline.
+- Primera partición estratificada 68% / 17% / 15% (entrenamiento, validación y test), primer `Pipeline` de preprocesado y Random Forest como modelo baseline.
 - Documentación completa del apartado 1 del notebook: cada análisis tiene su explicación y su observación, y las variables del código pasan a estar en inglés.
 - Notebook preparado para ejecutarse de principio a fin desde un clon limpio. Añadido `joblib` a `requirements.txt`.
 - **Rangos clínicos revisados**: los límites se justifican por definición de la variable, por la población de estudio o fisiológicamente, y solo marcan valores inverosímiles. Con ellos hay 263 valores fuera de rango en 11 de las 19 variables numéricas.
 - Nuevos hallazgos y decisiones:
   - **Alcohol negativo** (177 filas, el 82,5% de clase 0): parece la cola baja de la variable, así que se recortará a 0 en lugar de imputarlo.
   - **Incoherencias** entre variables (por ejemplo, HDL + LDL > colesterol total en 559 filas o 123 fumadores actuales con 0 años fumando): no se corrigen por defecto, porque no hay un criterio fiable para saber qué valor es erróneo.
-  - **Valores repetidos anómalos**: son el 91% de los outliers de sus variables (449 de 494) y el recorte por percentiles no los elimina, porque el percentil 99 coincide con el máximo. Requieren un tratamiento específico.
+  - **Valores repetidos anómalos**: son el 91% de los outliers de sus variables (449 de 494). Requieren un tratamiento específico.
   - **Outliers de proteína C reactiva**: el 32,6% son de alto riesgo, frente al 20% global, así que no se aplicará una eliminación general de outliers.
   - **Variables casi independientes**: incluso las que clínicamente deberían ir juntas tienen correlaciones muy bajas, lo que sugiere un dataset sintético. Habrá que comprobar si los imputadores multivariantes mejoran a la mediana.
 - Resumen de 10 problemáticas, con su evidencia y tratamiento propuesto, en el apartado 1.11.
-- Pendiente: ajustar y documentar el preprocesado (apartado 2) y comparar sus alternativas; después, modelos, evaluación y conclusiones.
+- Reestructuración del preprocesado (apartado 2):
+  - **Validación**: se descarta el conjunto de validación fijo, porque un único conjunto resulta poco fiable para comparar configuraciones. Se mantiene un test estratificado del 15% y la selección se hace con validación cruzada estratificada de 5 folds sobre el 85% restante (conjunto de desarrollo).
+  - **Métricas de seguimiento**: macro-F1, exactitud balanceada y recall de la clase de alto riesgo.
+  - **Valores fuera de rango**: alcohol y ejercicio se recortan siempre a su límite; en el resto de variables se implementan el recorte y la conversión a nulo para compararlos.
+  - **Valores repetidos anómalos**: el recorte por percentiles no los corrige, porque el percentil 99 coincide con el máximo. Se localizan por su valor exacto, con detección ajustada solo en entrenamiento, y se convierten en nulos.- Pendiente: completar el preprocesado (imputación, codificación, transformación, escalado, desbalance y configuraciones a comparar); después, modelos, evaluación y conclusiones.
