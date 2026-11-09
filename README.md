@@ -77,4 +77,12 @@ La semilla aleatoria está fijada (`SEED = 42`) para que los resultados sean rep
   - **Validación**: se descarta el conjunto de validación fijo, porque un único conjunto resulta poco fiable para comparar configuraciones. Se mantiene un test estratificado del 15% y la selección se hace con validación cruzada estratificada de 5 folds sobre el 85% restante (conjunto de desarrollo).
   - **Métricas de seguimiento**: macro-F1, exactitud balanceada y recall de la clase de alto riesgo.
   - **Valores fuera de rango**: alcohol y ejercicio se recortan siempre a su límite; en el resto de variables se implementan el recorte y la conversión a nulo para compararlos.
-  - **Valores repetidos anómalos**: el recorte por percentiles no los corrige, porque el percentil 99 coincide con el máximo. Se localizan por su valor exacto, con detección ajustada solo en entrenamiento, y se convierten en nulos.- Pendiente: completar el preprocesado (imputación, codificación, transformación, escalado, desbalance y configuraciones a comparar); después, modelos, evaluación y conclusiones.
+  - **Valores repetidos anómalos**: el recorte por percentiles no los corrige, porque el percentil 99 coincide con el máximo. Se localizan por su valor exacto, con detección ajustada solo en entrenamiento, y se convierten en nulos.
+
+### Semana 3 (9 nov - 15 nov): imputación y desbalance
+
+- **Nulos tras la limpieza**: cerca del 40% de los pacientes tiene algún valor ausente, así que se imputan en lugar de eliminar filas.
+- **Métodos de imputación**: se comparan la mediana, la imputación iterativa y KNN con datos estandarizados, ocultando valores conocidos para medir el error de reconstrucción. La iterativa y la mediana obtienen un error prácticamente igual y KNN es peor, aunque los tres se mantienen para comparar su efecto sobre los modelos.
+- **Indicador de valor ausente**: no se añade, porque con la corrección de Bonferroni ninguna variable muestra una relación significativa entre estar ausente y la clase.
+- **Desbalance de clases**: se comparan el aprendizaje sensible al coste (`class_weight="balanced"`) y el remuestreo con `SMOTENC`, que respeta las variables categóricas. Ambos se aplican solo durante el entrenamiento.
+- Pendiente: codificación, transformación y escalado (apartado 2.4) y montaje del pipeline con las configuraciones a comparar (apartado 2.6); después, modelos, evaluación y conclusiones.
