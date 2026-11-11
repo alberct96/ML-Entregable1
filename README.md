@@ -93,4 +93,5 @@ La semilla aleatoria está fijada (`SEED = 42`) para que los resultados sean rep
 - **Refactorización**: la limpieza del apartado 2.2 se agrupa en una función que se reutiliza en todo el notebook.
 - **Pipeline de preprocesado (apartado 2.6.1)**: una función une todas las técnicas en un `Pipeline` de imblearn, en este orden: limpieza, preparación de las numéricas, SMOTENC (opcional) y codificación de las categóricas.
 - **Pipeline de preprocesado (apartado 2.6)**: se han definido las configuraciones de pipeline de preprocesado que comparar haciendo uso de las funciones definidas en los apartados anteriores (apartado 2. completo). Adicionalmente, se adjuntan los datos salientes del los pipelines en una nueva carpeta de `data/preprocessed`.
-- Pendiente: ejecutarlas configuraciones a comparar (apartados 2.6.2 y 2.6.3) y repetir con ellas el ajuste, la evaluación y los test; después, evaluación final en test y conclusiones.
+- **Ejecuciones de los pipelines**: se he realizado la experimentación del descrita en el apartado 2.6, dejando el código de referencia como muestra de ejemplo del pipeline
+- Pendiente: Realizar análisis de resultados (la evaluación y los test); después, evaluación final en test y conclusiones
