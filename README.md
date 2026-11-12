@@ -18,7 +18,7 @@ El objetivo es clasificar a pacientes adultos en tres niveles de riesgo cardiova
 | `enfermedad_cardiovascular.csv` | Dataset proporcionado |
 | `requirements.txt` | Librerías y versiones exactas usadas |
 | `data/splits/` | Particiones de desarrollo y test generadas por el notebook |
-| `models/` | Modelos entrenados (por ahora, el baseline inicial, que el notebook ya no regenera) |
+| `models/` | `cv_search_results.joblib`: resultados de la búsqueda de hiperparámetros de las 30 combinaciones (métricas, puntuación por fold y mejor pipeline sin entrenar), que el notebook carga para no repetir el ajuste. También el baseline inicial, que el notebook ya no regenera |
 | `ML-MemoriaEntregable1.tex` / `.docx` | Memoria técnica (plantilla IEEE) |
 | `Practica_1_Machine_Learning_Cardiovascular.pdf` | Enunciado de la práctica |
 | `PR_CTICA_1-_Instrucciones.pdf` | Instrucciones de entrega |
@@ -94,4 +94,9 @@ La semilla aleatoria está fijada (`SEED = 42`) para que los resultados sean rep
 - **Pipeline de preprocesado (apartado 2.6.1)**: una función une todas las técnicas en un `Pipeline` de imblearn, en este orden: limpieza, preparación de las numéricas, SMOTENC (opcional) y codificación de las categóricas.
 - **Pipeline de preprocesado (apartado 2.6)**: se han definido las configuraciones de pipeline de preprocesado que comparar haciendo uso de las funciones definidas en los apartados anteriores (apartado 2. completo). Adicionalmente, se adjuntan los datos salientes del los pipelines en una nueva carpeta de `data/preprocessed`.
 - **Ejecuciones de los pipelines**: se he realizado la experimentación del descrita en el apartado 2.6, dejando el código de referencia como muestra de ejemplo del pipeline
-- Pendiente: Realizar análisis de resultados (la evaluación y los test); después, evaluación final en test y conclusiones
+- **Resultados guardados**: la búsqueda de hiperparámetros de las 30 combinaciones se guarda en `models/cv_search_results.joblib`, y los apartados 4 y 5 trabajan con esos resultados sin reentrenar la búsqueda.
+- **Análisis de errores (apartado 4.2)**: se hace con la mejor configuración de cada modelo. La clase de riesgo moderado es la más difícil (recall en torno a 0,5) y los pacientes de alto riesgo clasificados como bajo van del 2,3 % (SVM) al 4,7 % (LightGBM).
+- **Test estadísticos (apartado 5)**: se comparan los modelos dentro de cada configuración, las configuraciones dentro de cada modelo y la mejor combinación de cada modelo. Ninguna diferencia en macro-F1 es significativa. En el recall de alto riesgo, Friedman detecta diferencias entre modelos en tres configuraciones, con la regresión logística en primer lugar, aunque las comparaciones por pares no lo confirman tras el ajuste de Holm.
+- **Modelo final**: como las mejores combinaciones son estadísticamente equivalentes, se elige la regresión logística con `preprocessor_3` por su recall de alto riesgo, su interpretabilidad y su bajo sobreajuste, en lugar de XGBoost, que tiene el macro-F1 medio más alto.
+- **Evaluación en test (apartado 4.3)**: macro-F1 de 0,696, recall de alto riesgo de 0,794 y ningún paciente de alto riesgo clasificado como bajo.
+- **Conclusiones**: valoración cuantitativa y cualitativa (complejidad, interpretabilidad y robustez), coeficientes del modelo final y limitaciones.
